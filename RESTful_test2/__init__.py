@@ -8,7 +8,8 @@ db = SQLAlchemy()
 
 from RESTful_test2.resource.hello import Helloworld
 from RESTful_test2.resource.User import User, Userlist
-
+from RESTful_test2.config import Config
+from RESTful_test2.resource.auth import Login
 def create_app():
     """
     cmd cd to flask_test not RESTful_test2
@@ -21,9 +22,9 @@ def create_app():
     """
     app = Flask(__name__)
     api = Api(app)
-    # app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///demo.db'
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:1@localhost:3306/demo'
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    # use python class to config app
+    app.config.from_object(Config)
+
     db.init_app(app)
     migrate = Migrate(app, db)
 
@@ -31,5 +32,5 @@ def create_app():
     api.add_resource(Helloworld, '/')
     api.add_resource(User, '/user/<string:username>')
     api.add_resource(Userlist, "/users")
-
+    api.add_resource(Login, "/auth/login")
     return app
