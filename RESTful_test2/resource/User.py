@@ -1,8 +1,6 @@
 from flask_restful import Resource, reqparse
-from flask import request, current_app
-from RESTful_test2 import db
 from RESTful_test2.model.User import User as UserModel
-import jwt
+from flask_jwt import jwt_required
 
 user_list = []
 def min_length_strP(min_length):
@@ -46,9 +44,7 @@ class User(Resource):
         """
         get a user detail information
         """
-        user = db.session.query(UserModel).filter(
-            UserModel.name == username
-        ).first()
+        user = UserModel.get_by_username(username)
         if user:
             return user.as_dict()
         return {"message": "user not found"}, 404
@@ -62,9 +58,7 @@ class User(Resource):
         create a user
         """
         data = self.parse.parse_args()
-        user = db.session.query(UserModel).filter(
-            UserModel.name == username
-        ).first()
+        user = UserModel.get_by_username(username)
         if user:
             return {"message": "user already exist"}
         user = UserModel(
@@ -72,8 +66,7 @@ class User(Resource):
             email=data.get('email')
         )
         user.set_password(data.get('password'))
-        db.session.add(user)
-        db.session.commit()
+        user.add()
         return user.as_dict()
         # data = User.parse.parse_args()
         # user = {
@@ -90,13 +83,9 @@ class User(Resource):
         """
         delete a user
         """
-        user = db.session.query(UserModel).filter(
-            UserModel.name == username
-        ).first()
+        user = UserModel.get_by_username(username)
         if user:
-            db.session.delete(user)
-            db.session.commit()
-            # return user.as_dict()
+            user.delete()
             return {"message": "user delete done"}
         return {"message": "user not found"}, 404
         # for i, userr in enumerate(user_list):
@@ -111,14 +100,12 @@ class User(Resource):
         return code 204 can't show message body
         if you want to show message body, return code 200 and write return message
         """
-        user = db.session.query(UserModel).filter(
-            UserModel.name == username
-        ).first()
+        user = UserModel.get_by_username(username)
         if user:
             data = self.parse.parse_args()
             user.email = data.get('email')
             user.set_password(data.get('password'))
-            db.session.commit()
+            user.update()
             return user.as_dict()
         return {"message": "user not found"}
         # data = User.parse.parse_args()
@@ -131,20 +118,25 @@ class User(Resource):
 
 
 class Userlist(Resource):
-    def get(self):
-        token = request.headers.get("Authorization")
-        try:
-            jwt.decode(
-                token,
-                current_app.config.get('SECRET'),
-                algorithms="HS256"
-            )
-        except jwt.ExpiredSignature:
-            # the token is expired, return error message
-            return {"message": "Expired token, please login to get a new token"}
 
-        except jwt.InvalidTokenError:
-            # the token is error, return error message
-            return {"message": "Error token, please register or login"}
-        users = db.session.query(UserModel).all()
+    @jwt_required()
+    def get(self):
+        users = UserModel.get_user_list()
         return [u.as_dict() for u in users]
+    # def get(self):
+    #     token = request.headers.get("Authorization")
+    #     try:
+    #         jwt.decode(
+    #             token,
+    #             current_app.config.get('SECRET_KEY'),
+    #             algorithms="HS256"
+    #         )
+    #     except jwt.ExpiredSignature:
+    #         # the token is expired, return error message
+    #         return {"message": "Expired token, please login to get a new token"}
+    #
+    #     except jwt.InvalidTokenError:
+    #         # the token is error, return error message
+    #         return {"message": "Error token, please register or login"}
+    #     users = db.session.query(UserModel).all()
+    #     return [u.as_dict() for u in users]
