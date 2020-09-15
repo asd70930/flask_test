@@ -41,3 +41,5 @@ def create_app(config_name='development'):
 
     # api.add_resource(Login, "/auth/login")
     return app
+# gunicorn -w 4 RESTful_test2.wsgi:application
+# gunicorn -w 4 -b 0.0.0.0 RESTful_test2.wsgi:application

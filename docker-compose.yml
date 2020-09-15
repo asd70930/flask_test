@@ -1,0 +1,29 @@
+version: '3.8'
+services:
+  mysql:
+    image: "mysql:latest"
+    networks:
+      my_network:
+        ipv4_address: 10.5.0.3
+    ports:
+      - "3306:3306"
+    environment:
+      POSTGRES_PASSWORD: 123
+    restart: unless-stopped # stop it and not restart again
+  flask_api:
+    build: .
+    container_name: testing_flask
+    depends_on:
+      - mysql
+    ports:
+      - "8000:8000"
+    links:
+      - mysql
+    restart: always
+networks:
+  my_network:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.5.0.0/16
