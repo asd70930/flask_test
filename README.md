@@ -22,13 +22,14 @@ How to use:
 
 
 Todo list:
-1.RESTful 風格的API ok
- 
-2.MySQL資料庫建制, 與flask進行連接 ok 
 
-3.Token 設計,某些API使用前需要先驗證Token ok 
+- [x] 1.RESTful 風格的API 
  
-4.Docker包裝flask 與MySQL ok 
+- [x]2.MySQL資料庫建制, 與flask進行連接 
 
-5.Docker-compose  not yet
+- [x]3.Token 設計,某些API使用前需要先驗證Token 
+
+- [x]4.Docker包裝flask 與MySQL 
+
+- []5.Docker-compose  not yet
 
