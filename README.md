@@ -31,5 +31,5 @@ Todo list:
  
 - [x] 4.Docker包裝flask 與MySQL 
 
-- [ ] 5.Docker-compose  not yet
+- [ ] 5.Docker-compose  
 
