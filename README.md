@@ -25,11 +25,11 @@ Todo list:
 
 - [x] 1.RESTful 風格的API 
  
-- [x]2.MySQL資料庫建制, 與flask進行連接 
+- [x] 2.MySQL資料庫建制, 與flask進行連接 
+ 
+- [x] 3.Token 設計,某些API使用前需要先驗證Token 
+ 
+- [x] 4.Docker包裝flask 與MySQL 
 
-- [x]3.Token 設計,某些API使用前需要先驗證Token 
-
-- [x]4.Docker包裝flask 與MySQL 
-
-- []5.Docker-compose  not yet
+- [] 5.Docker-compose  not yet
 
